@@ -11,6 +11,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -26,33 +27,32 @@ class CmsPageResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'CMS';
+        return 'About';
     }
 
     public static function getModelLabel(): string
     {
-        return 'CMS';
+        return 'About';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'CMS';
+        return 'About';
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                TextInput::make('page')
-                    ->required()
-                    ->maxLength(255),
                 TextInput::make('title')
-                    ->label('Page title')
+                    ->label('Title')
                     ->required()
                     ->maxLength(255),
                 RichEditor::make('content')
+                    ->label('Description')
                     ->columnSpanFull(),
                 FileUpload::make('image')
+                    ->label('Image')
                     ->image()
                     ->disk('public')
                     ->directory('cms-pages'),
@@ -63,18 +63,12 @@ class CmsPageResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('page')
+                TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('title')
-                    ->searchable(),
             ])
             ->recordActions([
                 EditAction::make(),
-                DeleteAction::make(),
-            ])
-            ->toolbarActions([
-                DeleteBulkAction::make(),
             ])
             ->defaultSort('created_at', 'desc');
     }
@@ -83,7 +77,6 @@ class CmsPageResource extends Resource
     {
         return [
             'index' => Pages\ListCmsPages::route('/'),
-            'create' => Pages\CreateCmsPage::route('/create'),
             'edit' => Pages\EditCmsPage::route('/{record}/edit'),
         ];
     }

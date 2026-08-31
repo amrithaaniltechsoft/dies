@@ -35,6 +35,17 @@ class ServiceResource extends Resource
                     ->columnSpanFull(),
                 Textarea::make('description')
                     ->columnSpanFull(),
+                TextInput::make('meta_title')
+                    ->label('Meta title')
+                    ->maxLength(255),
+                TextInput::make('meta_keywords')
+                    ->label('Meta keywords')
+                    ->placeholder('service, maintenance, support')
+                    ->maxLength(255),
+                Textarea::make('meta_description')
+                    ->label('Meta description')
+                    ->maxLength(160)
+                    ->columnSpanFull(),
                 FileUpload::make('image')
                     ->required()
                     ->image()

@@ -34,42 +34,33 @@ class ProductResource extends Resource
             ->components([
                 TextInput::make('name')
                     ->required()
-                    ->maxLength(255)
-                    ->live()
-                    ->afterStateUpdated(function (Get $get, Set $set, ?string $state, ?string $old): void {
-                        $currentSlug = $get('slug');
-
-                        if (blank($currentSlug) || $currentSlug === Str::slug($old)) {
-                            $set('slug', Str::slug($state));
-                        }
-                    }),
-                TextInput::make('slug')
-                    ->required()
-                    ->unique(ignoreRecord: true)
                     ->maxLength(255),
+                TextInput::make('price')
+                    ->numeric(),
                 Textarea::make('description')
                     ->columnSpanFull(),
-                TextInput::make('price')
-                    ->required()
-                    ->numeric()
-                    ->prefix('$'),
                 TextInput::make('meta_title')
                     ->label('Meta title')
+                    ->maxLength(255),
+                TextInput::make('meta_keywords')
+                    ->label('Meta keywords')
+                    ->placeholder('product, category, keyword')
                     ->maxLength(255),
                 Textarea::make('meta_description')
                     ->label('Meta description')
                     ->maxLength(160)
-                    ->columnSpanFull(),
-                TextInput::make('meta_keywords')
-                    ->label('Meta keywords')
-                    ->placeholder('product, category, keyword')
-                    ->maxLength(255)
                     ->columnSpanFull(),
                 FileUpload::make('image')
                     ->required()
                     ->image()
                     ->disk('public')
                     ->directory('products'),
+                FileUpload::make('images')
+                    ->label('Gallery images')
+                    ->multiple()
+                    ->image()
+                    ->disk('public')
+                    ->directory('products/gallery'),
             ]);
     }
 
@@ -79,9 +70,6 @@ class ProductResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
-                    ->sortable(),
-                TextColumn::make('price')
-                    ->money('USD')
                     ->sortable(),
                 ImageColumn::make('image')
                     ->disk('public')

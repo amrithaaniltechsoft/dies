@@ -10,6 +10,9 @@ class Service extends Model
         'name',
         'description',
         'image',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
     ];
 
     protected function casts(): array

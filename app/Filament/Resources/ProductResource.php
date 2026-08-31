@@ -36,7 +36,9 @@ class ProductResource extends Resource
                     ->required()
                     ->maxLength(255),
                 TextInput::make('price')
-                    ->numeric(),
+                    ->nullable()
+                    ->numeric()
+                    ->minValue(0),
                 Textarea::make('description')
                     ->columnSpanFull(),
                 TextInput::make('meta_title')

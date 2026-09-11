@@ -5,12 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Product;
 use BackedEnum;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
@@ -40,6 +42,70 @@ class ProductResource extends Resource
                     ->numeric()
                     ->minValue(0),
                 Textarea::make('description')
+                    ->columnSpanFull(),
+                Repeater::make('benefits')
+                    ->label('Manufacturing Benefits')
+                    ->relationship()
+                    ->afterStateHydrated(function (Repeater $component): void {
+                        if ($component->getRawState()) {
+                            return;
+                        }
+
+                        $key = $component->generateUuid();
+
+                        $items = $component->getRawState() ?? [];
+
+                        if ($key) {
+                            $items[$key] = [];
+                        } else {
+                            $items[] = [];
+                        }
+
+                        $component->rawState($items);
+
+                        $component->getChildSchema($key ?? array_key_last($items))->fill();
+                    })
+                    ->simple(Textarea::make('benefit'))
+                    ->defaultItems(1)
+                    ->addable(false)
+                    ->orderColumn('sort')
+                    ->extraItemActions([
+                        Action::make('addBenefit')
+                            ->icon('heroicon-m-plus')
+                            ->tooltip('Add benefit')
+                            ->action(function (array $arguments, Repeater $component): void {
+                                $currentKey = $arguments['item'] ?? null;
+
+                                $newKey = $component->generateUuid();
+
+                                $items = [];
+
+                                foreach ($component->getRawState() ?? [] as $key => $item) {
+                                    $items[$key] = $item;
+
+                                    if ($key === $currentKey) {
+                                        if ($newKey) {
+                                            $items[$newKey] = [];
+                                        } else {
+                                            $items[] = [];
+
+                                            $newKey = array_key_last($items);
+                                        }
+                                    }
+                                }
+
+                                $component->rawState($items);
+
+                                $component->getChildSchema($newKey)->fill();
+
+                                $component->collapsed(false, shouldMakeComponentCollapsible: false);
+
+                                $component->callAfterStateUpdated();
+
+                                $component->partiallyRender();
+                            }),
+                    ])
+                    ->collapsed(false)
                     ->columnSpanFull(),
                 TextInput::make('meta_title')
                     ->label('Meta title')

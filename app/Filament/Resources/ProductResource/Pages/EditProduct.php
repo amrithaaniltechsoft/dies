@@ -16,4 +16,11 @@ class EditProduct extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function afterSave(): void
+    {
+        $this->getRecord()->benefits()
+            ->where(fn ($query) => $query->whereNull('benefit')->orWhereRaw('TRIM(benefit) = ?', ['']))
+            ->delete();
+    }
 }

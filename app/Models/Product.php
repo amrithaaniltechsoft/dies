@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Product extends Model
@@ -14,6 +15,10 @@ class Product extends Model
         'description',
         'image',
         'images',
+        'tag',
+        'full_desc',
+        'features',
+        'faqs',
         'meta_title',
         'meta_description',
         'meta_keywords',
@@ -41,6 +46,18 @@ class Product extends Model
         return [
             'price' => 'decimal:2',
             'images' => 'array',
+            'features' => 'array',
+            'faqs' => 'array',
         ];
+    }
+
+    public function benefits(): HasMany
+    {
+        return $this->hasMany(ProductBenefit::class)->orderBy('sort');
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image ? (str_starts_with($this->image, '/') ? $this->image : asset('storage/'.$this->image)) : null;
     }
 }

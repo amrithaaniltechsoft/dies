@@ -22,5 +22,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => 'admin123',
         ]);
+
+        $this->call([
+            CatalogSeeder::class,
+        ]);
     }
 }

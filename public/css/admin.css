@@ -1,0 +1,7 @@
+.fi-sidebar-group[data-group-label="CMS Content"] {
+    margin-top: -19px;
+}
+
+.fi-sidebar-group[data-group-label="CMS Content"] .fi-sidebar-group-label {
+    color: #ffffff;
+}

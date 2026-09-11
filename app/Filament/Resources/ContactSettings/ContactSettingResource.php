@@ -41,6 +41,9 @@ class ContactSettingResource extends Resource
     {
         return $schema
             ->components([
+                TextInput::make('company_name')
+                    ->label('Company name')
+                    ->maxLength(255),
                 TextInput::make('contact1')
                     ->label('Contact 1')
                     ->maxLength(255),
@@ -57,6 +60,11 @@ class ContactSettingResource extends Resource
                 Textarea::make('address')
                     ->label('Address')
                     ->rows(3)
+                    ->columnSpanFull(),
+                TextInput::make('hours')
+                    ->label('Operating hours')
+                    ->placeholder('Mon - Sat: 8:30 AM - 6:00 PM')
+                    ->maxLength(255)
                     ->columnSpanFull(),
             ]);
     }

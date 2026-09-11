@@ -40,6 +40,15 @@ class ServiceResource extends Resource
                     ->image()
                     ->disk('public')
                     ->directory('services'),
+                TextInput::make('meta_title')
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+                Textarea::make('meta_description')
+                    ->rows(3)
+                    ->columnSpanFull(),
+                TextInput::make('meta_keywords')
+                    ->maxLength(255)
+                    ->columnSpanFull(),
             ]);
     }
 

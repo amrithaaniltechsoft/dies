@@ -19,6 +19,9 @@ class ServiceResource extends JsonResource
             'features' => $this->features ?? [],
             'benefits' => $this->benefits ?? [],
             'faqs' => $this->faqs ?? [],
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,
+            'meta_keywords' => $this->meta_keywords,
         ];
     }
 }

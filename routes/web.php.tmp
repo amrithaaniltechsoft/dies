@@ -1,0 +1,1 @@
+﻿Route::middleware('web')->get('/admin-check', function () { return response('ok', 200); });
